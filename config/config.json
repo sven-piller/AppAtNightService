@@ -1,10 +1,14 @@
 {
   "server" : {
 <<<<<<< HEAD
+<<<<<<< HEAD
     "host" : "localhost",
 =======
     "host" : "appatnightservice.herokuapp.com",
 >>>>>>> url falsch
+=======
+    "host" : "appatnightservice",
+>>>>>>> index und favicon, vielleicht hilfts
     "port" : "27016"
   },
   "db" : {

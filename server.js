@@ -128,6 +128,13 @@ router.route('/flights')
 .post(function(req, res) {
   var flight = new Flight();
   flight.username = req.body.username;
+  flight.origin = req.body.origin;
+  flight.destination = req.body.destination;
+  flight.departure = req.body.departure;
+  flight.arrival = req.body.arrival;
+  flight.flightnumber = req.body.flightnumber;
+  flight.carrier = req.body.carrier;
+
 
   flight.save(function(err) {
     if (err) {
@@ -143,11 +150,21 @@ router.route('/flights')
 
 // get all the flights
 .get(function(req, res) {
-  Flight.find(function(err, flights) {
+  var query = Flight.find();
+  if (req.query.destination) {
+    query.where({
+      destination: req.query.destination
+    });
+    //TODO: iterate over the array of usernames
+  } else {
+    //TODO: Errormessage, no username is given to the api
+  }
+  query.exec(function(err, flights) {
     if (err) {
-      res.send(err);
+      return next(err);
     } else {
-      res.json(flights);
+      log(flights);
+      res.send(flights);
     }
   });
 });
@@ -168,24 +185,70 @@ router.route('/flights/:flight_id')
 
 // update the flight with this id
 .put(function(req, res) {
-  // use our bear model to find the bear we want
-  Flight.findById(req.params.flight_id, function(err, flight) {
-    if (err) {
-      res.send(err);
-    }
-    // update the flights info
-    flight.username = req.body.username;
-    flight.save(function(err) {
+    // use our bear model to find the bear we want
+    Flight.findById(req.params.flight_id, function(err, flight) {
       if (err) {
         res.send(err);
       }
+      // update the flights info
+      flight.username = req.body.username;
+      flight.save(function(err) {
+        if (err) {
+          res.send(err);
+        }
+        res.json({
+          message: 'Flight updated!'
+        });
+      });
+
+    });
+  })
+  // delete the flight with this id
+  .delete(function(req, res) {
+    Flight.remove({
+      _id: req.params.flight_id
+    }, function(err, flight) {
+      if (err) {
+        res.send(err);
+      }
+
       res.json({
-        message: 'Flight updated!'
+        message: 'Successfully deleted'
       });
     });
-
   });
+
+router.route('/searchflights')
+
+// get all the flights
+.post(function(req, res, next) {
+  // flight.username = req.body.username;
+  // flight.origin = req.body.origin;
+  // flight.destination = req.body.destination;
+  // flight.departure = req.body.departure;
+  // flight.arrival = req.body.arrival;
+  // flight.flightnumber = req.body.flightnumber;
+  // flight.carrier = req.body.carrier;
+
+  var query = Flight.find()
+    .where('destination').equals(req.body.destination)
+    .where('departure').equals(req.body.departure)
+    //.where('departure').gt(17).lt(66)
+    .where('username').in(req.body.usernames)
+    .limit(20)
+    .sort('-departure')
+    //.select('username origin destination departure carrier flightnumber')
+    .exec(function(err, flights) {
+      if (err) {
+        log(err, 'error');
+        return next(err);
+      } else {
+        log(flights, 'debug');
+        res.send(flights);
+      }
+    });
 });
+
 
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api

@@ -1,20 +1,7 @@
 {
   "server" : {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-    "host" : "localhost",
-=======
     "host" : "appatnightservice.herokuapp.com",
->>>>>>> url falsch
-=======
-    "host" : "appatnightservice",
->>>>>>> index und favicon, vielleicht hilfts
     "port" : "27016"
-=======
-    "host" : "serene-plains-9931.herokuapp.com",
-    "port" : "5000"
->>>>>>> heroku
   },
   "db" : {
     "host" : "test:test@ds033390.mongolab.com",

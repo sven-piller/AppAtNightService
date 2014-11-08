@@ -5,6 +5,7 @@
  *
  * LICENSE: MIT
  *
+ * @file
  * @author       Travel Track 1
  * @copyright    Copyright (c) 2014
  * @license      MIT
@@ -23,7 +24,7 @@ var properties = require('./config/config.json');
 // lib files
 var logger = require('./lib/libLogger').log;
 var helper = require('./lib/libHelper');
-// database files
+// database models
 var Flight = require('./app/models/flight');
 
 /**
@@ -49,7 +50,7 @@ var RELEASE = '1.0.20141108';
  * @param {string} message - Log message
  * @param {string} level - Log level [debug, _info_, warn, error]
  *
- * @author Sven Piller <sven.piller@junior-comtec.de>
+ * @author Sven Piller <sven.piller@dlh.de>
  */
 function log(message, level) {
   if (!level) {
@@ -58,14 +59,29 @@ function log(message, level) {
   logger(message, level, '[SERVER]');
 }
 
+/**
+ * string for server URL
+ * @constant
+ * @type {String}
+ * @default
+ */
 var serverUrl = 'http://' + properties.server.host + ':' + properties.server.port;
+
 log('Server online: ' + serverUrl, 'info');
 log(properties.server, 'debug');
 log(properties.db, 'debug');
 
-
-// Check Connection to database
+/**
+ * string for database URL
+ * @constant
+ * @type {String}
+ * @default
+ */
 var databaseUrl = 'mongodb://' + properties.db.host + '/' + properties.db.dbname;
+/**
+ * database object
+ * @type {object}
+ */
 var db = mongoose.connection;
 db.on('error', function() {
   log('Fehler bei der Anbindung der Datenbank', 'error');
@@ -200,6 +216,8 @@ router.route('/flights/:flight_id')
     });
   });
 
+// on routes that end in /searchflights
+// ----------------------------------------------------
 router.route('/searchflights')
 
 // get all the flights

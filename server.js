@@ -68,7 +68,16 @@ function log(message, level, indicator) {
  * @type {String}
  * @default
  */
+<<<<<<< HEAD
+<<<<<<< HEAD
 var serverUrl = 'http://' + properties.server.host + ':' + properties.server.port;
+=======
+var port = process.env.PORT || properties.server.port || 5000;
+var serverUrl = 'http://' + properties.server.host + ':' + port;
+>>>>>>> port workaround
+=======
+var serverUrl = 'http://' + properties.server.host + ':' + ( process.env.PORT || properties.server.port || 5000 );
+>>>>>>> port heroku
 
 log(properties.server, 'debug');
 log(properties.db, 'debug');
@@ -79,7 +88,12 @@ log(properties.db, 'debug');
  * @type {String}
  * @default
  */
-var databaseUrl = 'mongodb://' + properties.db.host + '/' + properties.db.dbname;
+//var databaseUrl = 'mongodb://' + properties.db.host + ':' + properties.db.port + '/' + properties.db.dbname;
+var databaseUrl = 'mongodb://test:test@ds033390.mongolab.com:33390/appatnight';
+
+
+log(serverUrl, 'debug');
+log(databaseUrl, 'debug');
 /**
  * database object
  * @type {object}
@@ -95,7 +109,7 @@ mongoose.connect(databaseUrl);
 
 // API
 var app = express();
-app.set('port', properties.server.port || 3000);
+app.set('port', port );
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true
@@ -113,7 +127,7 @@ router.use(function(req, res, next) {
   next(); // make sure we go to the next routes and don't stop here
 });
 
-router.get('/', function(req, res) {
+router.get('/api', function(req, res) {
   res.json({
     message: 'API available'
   });
@@ -300,6 +314,10 @@ router.route('/searchflights')
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api
 app.use('/api', router);
+
+app.get('/', function(request, response) {
+  response.send('Hello World');
+});
 
 app.use(function(err, req, res, next) {
   console.error(err.stack);

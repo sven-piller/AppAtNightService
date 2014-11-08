@@ -152,6 +152,41 @@ router.route('/flights')
   });
 });
 
+// on routes that end in /flights/:flight_id
+// ----------------------------------------------------
+router.route('/flights/:flight_id')
+
+// get the flight with that id
+.get(function(req, res) {
+  Flight.findById(req.params.flight_id, function(err, flight) {
+    if (err) {
+      res.send(err);
+    }
+    res.json(flight);
+  });
+})
+
+// update the flight with this id
+.put(function(req, res) {
+  // use our bear model to find the bear we want
+  Flight.findById(req.params.flight_id, function(err, flight) {
+    if (err) {
+      res.send(err);
+    }
+    // update the flights info
+    flight.username = req.body.username;
+    flight.save(function(err) {
+      if (err) {
+        res.send(err);
+      }
+      res.json({
+        message: 'Flight updated!'
+      });
+    });
+
+  });
+});
+
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api
 app.use('/api', router);

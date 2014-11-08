@@ -136,7 +136,7 @@
 <blockquote>
 <p>grunt jsdoc</p>
 </blockquote>
-<h2>Verwendung</h2><h3>Einen neuen Flug speichern:</h3><p><strong>request</strong></p>
+<h2>Verwendung</h2><h3>Einen neuen Flug speichern</h3><p><strong>request</strong></p>
 <blockquote>
 <p>POST http://HOSTNAME:27016/api/flights</p>
 </blockquote>
@@ -164,18 +164,24 @@
   &quot;flightnumber&quot; : &quot;108&quot;,
   &quot;arrival&quot;      : &quot;2014-11-09T12:30:12&quot;,
   &quot;departure&quot;    : &quot;2014-11-09T11:30:12&quot;,
+  &quot;departureDate&quot;: &quot;2014-11-09T11:30:12.000Z&quot;,
   &quot;destination&quot;  : &quot;FRA&quot;,
   &quot;origin&quot;       : &quot;MUC&quot;,
   &quot;username&quot;     : &quot;maxmustermann&quot;,
   &quot;_id&quot;          : &quot;545e4110a9b586082fbea976&quot;
-}</code></pre><h3>Alle Flüge zu den übergebenen Freunden suchen</h3><p><strong>request</strong></p>
+}</code></pre><h3>Alle Flüge zu den übergebenen Freunden suchen</h3><p>Es werden alle Einträge in der Datenbank zurückgegeben, auf die die Kriterien zutreffen.
+Dabei wird die Destination auf Gleichheit geprüft. Der Username wird in dem Array mit allen bekannten Usernamen 
+abgeglichen. Die zu suchenden Flüge liegen in einem Zeitfenster von dem gewünschten Abflugtag +/- der Tage im 
+Parameter <em>timerange</em>.</p>
+<p><strong>request</strong></p>
 <blockquote>
 <p>POST http://HOSTNAME:27016/api/searchflights</p>
 </blockquote>
 <pre class="prettyprint source"><code>{
-  &quot;usernames&quot;    : string,
+  &quot;usernames&quot;    : [string],
   &quot;destination&quot;  : string,
   &quot;departure&quot;    : string,
+  &quot;timerange&quot;    : integer
 }</code></pre><p><strong>example</strong></p>
 <pre class="prettyprint source"><code>{
   &quot;usernames&quot;    : &quot;maxmustermann&quot;,
@@ -189,11 +195,12 @@
   &quot;flightnumber&quot; : &quot;108&quot;,
   &quot;arrival&quot;      : &quot;2014-11-09T12:30:12&quot;,
   &quot;departure&quot;    : &quot;2014-11-09T11:30:12&quot;,
+  &quot;departureDate&quot;: &quot;2014-11-09T11:30:12.000Z&quot;,
   &quot;destination&quot;  : &quot;FRA&quot;,
   &quot;origin&quot;       : &quot;MUC&quot;,
   &quot;username&quot;     : &quot;maxmustermann&quot;,
   &quot;_id&quot;          : &quot;545e4110a9b586082fbea976&quot;
-}</code></pre><h3>Alle Flüge auslesen:</h3><p><strong>request</strong></p>
+}</code></pre><h3>Alle Flüge auslesen</h3><p><strong>request</strong></p>
 <blockquote>
 <p>GET http://HOSTNAME:27016/api/flights</p>
 </blockquote>
@@ -204,6 +211,7 @@
   &quot;flightnumber&quot; : &quot;108&quot;,
   &quot;arrival&quot;      : &quot;2014-11-09T12:30:12&quot;,
   &quot;departure&quot;    : &quot;2014-11-09T11:30:12&quot;,
+  &quot;departureDate&quot;: &quot;2014-11-09T11:30:12.000Z&quot;,
   &quot;destination&quot;  : &quot;FRA&quot;,
   &quot;origin&quot;       : &quot;MUC&quot;,
   &quot;username&quot;     : &quot;maxmustermann&quot;,
@@ -214,11 +222,12 @@
   &quot;flightnumber&quot; : &quot;108&quot;,
   &quot;arrival&quot;      : &quot;2014-11-09T12:30:12&quot;,
   &quot;departure&quot;    : &quot;2014-11-09T11:30:12&quot;,
+  &quot;departureDate&quot;: &quot;2014-11-09T11:30:12.000Z&quot;,
   &quot;destination&quot;  : &quot;FRA&quot;,
   &quot;origin&quot;       : &quot;MUC&quot;,
   &quot;username&quot;     : &quot;susisorglos&quot;,
   &quot;_id&quot;          : &quot;545e4110a9b586082fbea976&quot;
-}</code></pre><h3>Einen Flug anhand der ID auslesen:</h3><p><strong>request</strong></p>
+}</code></pre><h3>Einen Flug anhand der ID auslesen</h3><p><strong>request</strong></p>
 <blockquote>
 <p>GET http://HOSTNAME:27016/api/flights/flight_id</p>
 </blockquote>
@@ -229,11 +238,12 @@
   &quot;flightnumber&quot; : &quot;108&quot;,
   &quot;arrival&quot;      : &quot;2014-11-09T12:30:12&quot;,
   &quot;departure&quot;    : &quot;2014-11-09T11:30:12&quot;,
+  &quot;departureDate&quot;: &quot;2014-11-09T11:30:12.000Z&quot;,
   &quot;destination&quot;  : &quot;FRA&quot;,
   &quot;origin&quot;       : &quot;MUC&quot;,
   &quot;username&quot;     : &quot;maxmustermann&quot;,
   &quot;_id&quot;          : &quot;545e4110a9b586082fbea976&quot;
-}</code></pre><h3>Einen Flug verändern anhand der ID:</h3><p><strong>request</strong></p>
+}</code></pre><h3>Einen Flug verändern anhand der ID</h3><p><strong>request</strong></p>
 <blockquote>
 <p>PUT http://HOSTNAME:27016/api/flights/flight_id</p>
 </blockquote>
@@ -250,6 +260,7 @@
   &quot;flightnumber&quot; : &quot;108&quot;,
   &quot;arrival&quot;      : &quot;2014-11-09T12:30:12&quot;,
   &quot;departure&quot;    : &quot;2014-11-09T10:30:12&quot;,
+  &quot;departureDate&quot;: &quot;2014-11-09T10:30:12.000Z&quot;,
   &quot;destination&quot;  : &quot;FRA&quot;,
   &quot;origin&quot;       : &quot;MUC&quot;,
   &quot;username&quot;     : &quot;maxmustermann&quot;,

@@ -5,6 +5,7 @@
  *
  * LICENSE: MIT
  *
+ * @file
  * @author       Travel Track 1
  * @copyright    Copyright (c) 2014
  * @license      MIT
@@ -23,7 +24,7 @@ var properties = require('./config/config.json');
 // lib files
 var logger = require('./lib/libLogger').log;
 var helper = require('./lib/libHelper');
-// database files
+// database models
 var Flight = require('./app/models/flight');
 
 /**
@@ -49,23 +50,40 @@ var RELEASE = '1.0.20141108';
  * @param {string} message - Log message
  * @param {string} level - Log level [debug, _info_, warn, error]
  *
- * @author Sven Piller <sven.piller@junior-comtec.de>
+ * @author Sven Piller <sven.piller@dlh.de>
  */
-function log(message, level) {
+function log(message, level, indicator) {
   if (!level) {
     level = 'info';
   }
-  logger(message, level, '[SERVER]');
+  if (!indicator) {
+    indicator = '[SERVER]';
+  }
+  logger(message, level, indicator);
 }
 
+/**
+ * string for server URL
+ * @constant
+ * @type {String}
+ * @default
+ */
 var serverUrl = 'http://' + properties.server.host + ':' + properties.server.port;
-log('Server online: ' + serverUrl, 'info');
+
 log(properties.server, 'debug');
 log(properties.db, 'debug');
 
-
-// Check Connection to database
+/**
+ * string for database URL
+ * @constant
+ * @type {String}
+ * @default
+ */
 var databaseUrl = 'mongodb://' + properties.db.host + '/' + properties.db.dbname;
+/**
+ * database object
+ * @type {object}
+ */
 var db = mongoose.connection;
 db.on('error', function() {
   log('Fehler bei der Anbindung der Datenbank', 'error');
@@ -75,19 +93,8 @@ db.once('open', function() {
 });
 mongoose.connect(databaseUrl);
 
-var sampleRequest = {
-  "username": "@svenpiller",
-  "origin": "MUC",
-  "destination": "FRA",
-  "departure": "2014-11-09T11:30:12",
-  "arrival": "2014-11-09T12:30:12",
-  "flightnumber": "108",
-  "carrier": "LH"
-};
-
 // API
 var app = express();
-
 app.set('port', properties.server.port || 3000);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -95,14 +102,10 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(methodOverride());
 app.use(cookieParser());
-// app.use(session({ secret: 'keyboard cat' }));
-// app.use(passport.initialize());
-// app.use(passport.session());
-// app.use(express.static(path.join(__dirname, 'public')));
 
 // ROUTES FOR OUR API
 // =============================================================================
-var router = express.Router(); // get an instance of the express Router
+var router = express.Router();
 
 router.use(function(req, res, next) {
   // do logging
@@ -111,14 +114,11 @@ router.use(function(req, res, next) {
   next(); // make sure we go to the next routes and don't stop here
 });
 
-// test route to make sure everything is working (accessed at GET http://localhost:8080/api)
 router.get('/', function(req, res) {
   res.json({
     message: 'API available'
   });
 });
-
-// more routes for our API will happen here
 
 // on routes that end in /flights
 // ----------------------------------------------------
@@ -128,13 +128,20 @@ router.route('/flights')
 .post(function(req, res) {
   var flight = new Flight();
   flight.username = req.body.username;
+  flight.origin = req.body.origin;
+  flight.destination = req.body.destination;
+  flight.departure = req.body.departure;
+  flight.arrival = req.body.arrival;
+  flight.flightnumber = req.body.flightnumber;
+  flight.carrier = req.body.carrier;
+
 
   flight.save(function(err) {
     if (err) {
-      log(err, 'error');
+      log(err, 'error', '[API]');
       res.send(err);
     } else {
-      log(flight);
+      log(flight, 'debug', '[API]');
       res.send(flight);
       //res.json({ message: 'Flight created!' });
     }
@@ -143,54 +150,147 @@ router.route('/flights')
 
 // get all the flights
 .get(function(req, res) {
-  Flight.find(function(err, flights) {
-    if (err) {
-      res.send(err);
-    } else {
-      res.json(flights);
-    }
-  });
-});
-
-// REGISTER OUR ROUTES -------------------------------
-// all of our routes will be prefixed with /api
-app.use('/api', router);
-
-
-
-/*
-app.get('/api/flights', function(req, res, next) {
   var query = Flight.find();
-  req.query = sampleRequest;
-  if (req.query.username) {
-    query.where({ username: req.query.username });
+  if (req.query.destination) {
+    query.where({
+      destination: req.query.destination
+    });
     //TODO: iterate over the array of usernames
   } else {
     //TODO: Errormessage, no username is given to the api
   }
   query.exec(function(err, flights) {
     if (err) {
+      log(err, 'error', '[API]');
       return next(err);
+    } else {
+      log(flights, 'debug', '[API]');
+      res.send(flights);
     }
-    log(flights);
-    res.send(flights);
   });
 });
 
-app.post()
+// on routes that end in /flights/:flight_id
+// ----------------------------------------------------
+router.route('/flights/:flight_id')
 
+// get the flight with that id
+.get(function(req, res) {
+  Flight.findById(req.params.flight_id, function(err, flight) {
+    if (err) {
+      log(err, 'error', '[API]');
+      res.send(err);
+    } else {
+      log(flights, 'debug', '[API]');
+      res.json(flight);
+    }
+  });
+})
 
-app.get('*', function(req, res) {
-  res.redirect('/#' + req.originalUrl);
+// update the flight with this id
+.put(function(req, res) {
+    // use our bear model to find the bear we want
+    Flight.findById(req.params.flight_id, function(err, flight) {
+      if (err) {
+        log(err, 'error', '[API]');
+        res.send(err);
+      }
+      // update the flights info
+      if (req.body.username && (req.body.username !== flight.username)) {
+        flight.username = req.body.username;
+      }
+      if (req.body.origin && (req.body.origin !== flight.origin)) {
+        flight.origin = req.body.origin;
+      }
+      if (req.body.destination && (req.body.destination !== flight.destination)) {
+        flight.destination = req.body.destination;
+      }
+      if (req.body.departure && (req.body.departure !== flight.departure)) {
+        flight.departure = req.body.departure;
+      }
+      if (req.body.arrival && (req.body.arrival !== flight.arrival)) {
+        flight.arrival = req.body.arrival;
+      }
+      if (req.body.flightnumber && (req.body.flightnumber !== flight.flightnumber)) {
+        flight.flightnumber = req.body.flightnumber;
+      }
+      if (req.body.carrier && (req.body.carrier !== flight.carrier)) {
+        flight.carrier = req.body.carrier;
+      }
+
+      flight.save(function(err) {
+        if (err) {
+          log(err, 'error', '[API]');
+          res.send(err);
+        }
+        res.json({
+          message: 'Flight updated!'
+        });
+      });
+
+    });
+  })
+  // delete the flight with this id
+  .delete(function(req, res) {
+    Flight.remove({
+      _id: req.params.flight_id
+    }, function(err, flight) {
+      if (err) {
+        log(err, 'error', '[API]');
+        res.send(err);
+      }
+
+      res.json({
+        message: 'Successfully deleted'
+      });
+    });
+  });
+
+// on routes that end in /searchflights
+// ----------------------------------------------------
+router.route('/searchflights')
+
+// get all the flights
+.post(function(req, res, next) {
+  // flight.username = req.body.username;
+  // flight.origin = req.body.origin;
+  // flight.destination = req.body.destination;
+  // flight.departure = req.body.departure;
+  // flight.arrival = req.body.arrival;
+  // flight.flightnumber = req.body.flightnumber;
+  // flight.carrier = req.body.carrier;
+
+  var query = Flight.find()
+    .where('destination').equals(req.body.destination)
+    .where('departure').equals(req.body.departure)
+    //.where('departure').gt(17).lt(66)
+    .where('username').in(req.body.usernames)
+    .limit(20)
+    .sort('-departure')
+    //.select('username origin destination departure carrier flightnumber')
+    .exec(function(err, flights) {
+      if (err) {
+        log(err, 'error', '[API]');
+        return next(err);
+      } else {
+        log(flights, 'debug', '[API]');
+        res.send(flights);
+      }
+    });
 });
-*/
+
+
+// REGISTER OUR ROUTES -------------------------------
+// all of our routes will be prefixed with /api
+app.use('/api', router);
+
 app.use(function(err, req, res, next) {
   console.error(err.stack);
-  res.send(500, {
+  res.status(500).send({
     message: err.message
   });
 });
 
 app.listen(app.get('port'), function() {
-  logger('Express server listening on port ' + app.get('port'), 'info', '[EXPRESS]');
+  logger('Express server listening on ' + serverUrl, 'info', '[EXPRESS]');
 });

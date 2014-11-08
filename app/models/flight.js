@@ -8,7 +8,8 @@ var FlightSchema = new mongoose.Schema({
   departureDate: Date,
   arrival: String,
   carrier: String,
-  flightnumber: String
+  flightnumber: String,
+  identifier: String
 });
 
 module.exports = mongoose.model('Flight', FlightSchema);

@@ -1,5 +1,7 @@
 # AppAtNightService
 
+__Travel Track 1__ von [Lufthansa](http://www.lufthansa.com) während des [Hackathon App@Night](https://www.appatnight.de/) an der LMU München am Wochenende vom 07.11. - 09.11.2014.
+
 Ausführen:
 > node server.js
 
@@ -47,6 +49,7 @@ __response__
       "arrival"      : "2014-11-09T12:30:12",
       "departure"    : "2014-11-09T11:30:12",
       "departureDate": "2014-11-09T11:30:12.000Z",
+      "identifier"   : "LH-108-2014-11-09",
       "destination"  : "FRA",
       "origin"       : "MUC",
       "username"     : "maxmustermann",
@@ -55,8 +58,8 @@ __response__
 
 ### Alle Flüge zu den übergebenen Freunden suchen
 Es werden alle Einträge in der Datenbank zurückgegeben, auf die die Kriterien zutreffen.
-Dabei wird die Destination auf Gleichheit geprüft. Der Username wird in dem Array mit allen bekannten Usernamen 
-abgeglichen. Die zu suchenden Flüge liegen in einem Zeitfenster von dem gewünschten Abflugtag +/- der Tage im 
+Dabei wird die Destination auf Gleichheit geprüft. Der Username wird in dem Array mit allen bekannten Usernamen
+abgeglichen. Die zu suchenden Flüge liegen in einem Zeitfenster von dem gewünschten Abflugtag +/- der Tage im
 Parameter _timerange_.
 
 __request__
@@ -87,6 +90,7 @@ __response__
       "arrival"      : "2014-11-09T12:30:12",
       "departure"    : "2014-11-09T11:30:12",
       "departureDate": "2014-11-09T11:30:12.000Z",
+      "identifier"   : "LH-108-2014-11-09",
       "destination"  : "FRA",
       "origin"       : "MUC",
       "username"     : "maxmustermann",
@@ -106,6 +110,7 @@ __response__
       "arrival"      : "2014-11-09T12:30:12",
       "departure"    : "2014-11-09T11:30:12",
       "departureDate": "2014-11-09T11:30:12.000Z",
+      "identifier"   : "LH-108-2014-11-09",
       "destination"  : "FRA",
       "origin"       : "MUC",
       "username"     : "maxmustermann",
@@ -117,6 +122,7 @@ __response__
       "arrival"      : "2014-11-09T12:30:12",
       "departure"    : "2014-11-09T11:30:12",
       "departureDate": "2014-11-09T11:30:12.000Z",
+      "identifier"   : "LH-108-2014-11-09",
       "destination"  : "FRA",
       "origin"       : "MUC",
       "username"     : "susisorglos",
@@ -136,6 +142,7 @@ __response__
       "arrival"      : "2014-11-09T12:30:12",
       "departure"    : "2014-11-09T11:30:12",
       "departureDate": "2014-11-09T11:30:12.000Z",
+      "identifier"   : "LH-108-2014-11-09",
       "destination"  : "FRA",
       "origin"       : "MUC",
       "username"     : "maxmustermann",
@@ -166,6 +173,7 @@ __response__
       "arrival"      : "2014-11-09T12:30:12",
       "departure"    : "2014-11-09T10:30:12",
       "departureDate": "2014-11-09T10:30:12.000Z",
+      "identifier"   : "LH-108-2014-11-09",
       "destination"  : "FRA",
       "origin"       : "MUC",
       "username"     : "maxmustermann",

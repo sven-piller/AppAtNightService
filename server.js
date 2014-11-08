@@ -108,8 +108,7 @@ app.use(cookieParser());
 var router = express.Router();
 
 router.use(function(req, res, next) {
-  // do logging
-  log('Request at ' + Date.now(), 'debug', '[ROUTER]');
+  log('API-Request at ' + Date.now(), 'debug', '[ROUTER]');
   log(req.body, 'debug', '[ROUTER]');
   next(); // make sure we go to the next routes and don't stop here
 });
@@ -135,6 +134,7 @@ router.route('/flights')
   flight.flightnumber = req.body.flightnumber;
   flight.carrier = req.body.carrier;
   flight.departureDate = new Date(req.body.departure);
+  flight.identifier = req.body.carrier + '-' + req.body.flightnumber + '-' + req.body.departure.substr(0, 10);
 
 
   flight.save(function(err) {
@@ -196,28 +196,45 @@ router.route('/flights/:flight_id')
         log(err, 'error', '[API]');
         res.send(err);
       }
+
+      var username_changed = req.body.username && (req.body.username !== flight.username);
+      var origin_changed = req.body.origin && (req.body.origin !== flight.origin);
+      var destination_changed = req.body.destination && (req.body.destination !== flight.destination);
+      var departure_changed = req.body.departure && (req.body.departure !== flight.departure);
+      var arrival_changed = req.body.arrival && (req.body.arrival !== flight.arrival);
+      var flightnumber_changed = req.body.flightnumber && (req.body.flightnumber !== flight.flightnumber);
+      var carrier_changed = req.body.carrier && (req.body.carrier !== flight.carrier);
+
       // update the flights info
-      if (req.body.username && (req.body.username !== flight.username)) {
+      if (username_changed) {
         flight.username = req.body.username;
       }
-      if (req.body.origin && (req.body.origin !== flight.origin)) {
+      if (origin_changed) {
         flight.origin = req.body.origin;
       }
-      if (req.body.destination && (req.body.destination !== flight.destination)) {
+      if (destination_changed) {
         flight.destination = req.body.destination;
       }
-      if (req.body.departure && (req.body.departure !== flight.departure)) {
+      if (departure_changed) {
         flight.departure = req.body.departure;
         flight.departureDate = new Date(req.body.departure);
       }
-      if (req.body.arrival && (req.body.arrival !== flight.arrival)) {
+      if (arrival_changed) {
         flight.arrival = req.body.arrival;
       }
-      if (req.body.flightnumber && (req.body.flightnumber !== flight.flightnumber)) {
+      if (flightnumber_changed) {
         flight.flightnumber = req.body.flightnumber;
       }
-      if (req.body.carrier && (req.body.carrier !== flight.carrier)) {
+      if (carrier_changed) {
         flight.carrier = req.body.carrier;
+      }
+      if (carrier_changed || flightnumber_changed || departure_changed) {
+        flight.identifier = (carrier_changed) ? req.body.carrier : flight.carrier;
+        flight.identifier += '-';
+        flight.identifier += (flightnumber_changed) ? req.body.flightnumber : flight.flightnumber;
+        flight.identifier += '-';
+        flight.identifier += (departure_changed) ? req.body.departure.substr(0, 10) : flight.departure.substr(0,
+          10);
       }
 
       flight.save(function(err) {

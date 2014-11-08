@@ -134,6 +134,7 @@ router.route('/flights')
   flight.arrival = req.body.arrival;
   flight.flightnumber = req.body.flightnumber;
   flight.carrier = req.body.carrier;
+  flight.departureDate = new Date(req.body.departure);
 
 
   flight.save(function(err) {
@@ -207,6 +208,7 @@ router.route('/flights/:flight_id')
       }
       if (req.body.departure && (req.body.departure !== flight.departure)) {
         flight.departure = req.body.departure;
+        flight.departureDate = new Date(req.body.departure);
       }
       if (req.body.arrival && (req.body.arrival !== flight.arrival)) {
         flight.arrival = req.body.arrival;
@@ -252,21 +254,19 @@ router.route('/searchflights')
 
 // get all the flights
 .post(function(req, res, next) {
-  // flight.username = req.body.username;
-  // flight.origin = req.body.origin;
-  // flight.destination = req.body.destination;
-  // flight.departure = req.body.departure;
-  // flight.arrival = req.body.arrival;
-  // flight.flightnumber = req.body.flightnumber;
-  // flight.carrier = req.body.carrier;
+  var timerange = (req.body.timerange) ? req.body.timerange : 0;
+  var departureDate = new Date(req.body.departure).getTime();
+  var upperBound = departureDate + (timerange * 24 * 60 * 60 * 1000);
+  log('upperBound: ' + new Date(upperBound).toString(), 'debug');
+  var lowerBound = departureDate - (timerange * 24 * 60 * 60 * 1000);
+  log('lowerBound: ' + new Date(lowerBound).toString(), 'debug');
 
   var query = Flight.find()
     .where('destination').equals(req.body.destination)
-    .where('departure').equals(req.body.departure)
-    //.where('departure').gt(17).lt(66)
+    .where('departureDate').gt(lowerBound).lt(upperBound)
     .where('username').in(req.body.usernames)
-    .limit(20)
-    .sort('-departure')
+    //    .limit(20)
+    .sort('departure')
     //.select('username origin destination departure carrier flightnumber')
     .exec(function(err, flights) {
       if (err) {

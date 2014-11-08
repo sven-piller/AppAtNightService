@@ -5,6 +5,7 @@ var FlightSchema = new mongoose.Schema({
   origin: String,
   destination: String,
   departure: String,
+  departureDate: Date,
   arrival: String,
   carrier: String,
   flightnumber: String

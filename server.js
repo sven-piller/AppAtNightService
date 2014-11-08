@@ -88,7 +88,12 @@ log(properties.db, 'debug');
  * @type {String}
  * @default
  */
-var databaseUrl = 'mongodb://' + properties.db.host + '/' + properties.db.dbname;
+//var databaseUrl = 'mongodb://' + properties.db.host + ':' + properties.db.port + '/' + properties.db.dbname;
+var databaseUrl = 'mongodb://test:test@ds033390.mongolab.com:33390/appatnight';
+
+
+log(serverUrl, 'debug');
+log(databaseUrl, 'debug');
 /**
  * database object
  * @type {object}

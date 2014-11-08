@@ -64,28 +64,31 @@ function log(message, level, indicator) {
 
 /**
  * string for server URL
- * @constant
+
  * @type {String}
- * @default
  */
+var serverUrl = null
+  /**
+   * string for database URL
+   * @type {String}
+   */
+var databaseUrl = null
+  /**
+   * portnumber
+   * @type {Number}
+   */
 var port = process.env.PORT || properties.server.port || 5000;
-var serverUrl = 'http://' + properties.server.host + ':' + port;
-
-log(properties.server, 'debug');
-log(properties.db, 'debug');
-
-/**
- * string for database URL
- * @constant
- * @type {String}
- * @default
- */
-//var databaseUrl = 'mongodb://' + properties.db.host + ':' + properties.db.port + '/' + properties.db.dbname;
-var databaseUrl = 'mongodb://test:test@ds033390.mongolab.com:33390/appatnight';
-
-
+log(process.env.NODE_ENV === 'production');
+if (process.env.NODE_ENV === 'production') {
+  var serverUrl = 'http://' + properties.server.host + ':' + port;
+  databaseUrl = 'mongodb://test:test@ds033390.mongolab.com:33390/appatnight';
+} else {
+  var serverUrl = 'http://localhost:' + port;
+  databaseUrl = 'mongodb://' + properties.db.host + ':' + properties.db.port + '/' + properties.db.dbname;
+}
 log(serverUrl, 'debug');
 log(databaseUrl, 'debug');
+
 /**
  * database object
  * @type {object}
@@ -101,7 +104,7 @@ mongoose.connect(databaseUrl);
 
 // API
 var app = express();
-app.set('port', port );
+app.set('port', port);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true

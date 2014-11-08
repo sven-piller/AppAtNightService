@@ -95,7 +95,7 @@ mongoose.connect(databaseUrl);
 
 // API
 var app = express();
-app.set('port', properties.server.port || 3000);
+app.set('port', port );
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true

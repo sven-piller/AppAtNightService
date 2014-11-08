@@ -196,7 +196,28 @@ router.route('/flights/:flight_id')
         res.send(err);
       }
       // update the flights info
-      flight.username = req.body.username;
+      if (req.body.username && (req.body.username !== flight.username)) {
+        flight.username = req.body.username;
+      }
+      if (req.body.origin && (req.body.origin !== flight.origin)) {
+        flight.origin = req.body.origin;
+      }
+      if (req.body.destination && (req.body.destination !== flight.destination)) {
+        flight.destination = req.body.destination;
+      }
+      if (req.body.departure && (req.body.departure !== flight.departure)) {
+        flight.departure = req.body.departure;
+      }
+      if (req.body.arrival && (req.body.arrival !== flight.arrival)) {
+        flight.arrival = req.body.arrival;
+      }
+      if (req.body.flightnumber && (req.body.flightnumber !== flight.flightnumber)) {
+        flight.flightnumber = req.body.flightnumber;
+      }
+      if (req.body.carrier && (req.body.carrier !== flight.carrier)) {
+        flight.carrier = req.body.carrier;
+      }
+
       flight.save(function(err) {
         if (err) {
           log(err, 'error', '[API]');
@@ -265,7 +286,7 @@ app.use('/api', router);
 
 app.use(function(err, req, res, next) {
   console.error(err.stack);
-  res.send(500, {
+  res.status(500).send({
     message: err.message
   });
 });

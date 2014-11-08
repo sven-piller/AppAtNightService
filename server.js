@@ -113,7 +113,7 @@ router.use(function(req, res, next) {
   next(); // make sure we go to the next routes and don't stop here
 });
 
-router.get('/', function(req, res) {
+router.get('/api', function(req, res) {
   res.json({
     message: 'API available'
   });
@@ -300,6 +300,10 @@ router.route('/searchflights')
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api
 app.use('/api', router);
+
+app.get('/', function(request, response) {
+  response.send('Hello World');
+});
 
 app.use(function(err, req, res, next) {
   console.error(err.stack);

@@ -52,11 +52,14 @@ var RELEASE = '1.0.20141108';
  *
  * @author Sven Piller <sven.piller@dlh.de>
  */
-function log(message, level) {
+function log(message, level, indicator) {
   if (!level) {
     level = 'info';
   }
-  logger(message, level, '[SERVER]');
+  if (!indicator) {
+    indicator = '[SERVER]';
+  }
+  logger(message, level, indicator);
 }
 
 /**
@@ -67,7 +70,6 @@ function log(message, level) {
  */
 var serverUrl = 'http://' + properties.server.host + ':' + properties.server.port;
 
-log('Server online: ' + serverUrl, 'info');
 log(properties.server, 'debug');
 log(properties.db, 'debug');
 
@@ -136,10 +138,10 @@ router.route('/flights')
 
   flight.save(function(err) {
     if (err) {
-      log(err, 'error');
+      log(err, 'error', '[API]');
       res.send(err);
     } else {
-      log(flight);
+      log(flight, 'debug', '[API]');
       res.send(flight);
       //res.json({ message: 'Flight created!' });
     }
@@ -159,9 +161,10 @@ router.route('/flights')
   }
   query.exec(function(err, flights) {
     if (err) {
+      log(err, 'error', '[API]');
       return next(err);
     } else {
-      log(flights);
+      log(flights, 'debug', '[API]');
       res.send(flights);
     }
   });
@@ -175,9 +178,12 @@ router.route('/flights/:flight_id')
 .get(function(req, res) {
   Flight.findById(req.params.flight_id, function(err, flight) {
     if (err) {
+      log(err, 'error', '[API]');
       res.send(err);
+    } else {
+      log(flights, 'debug', '[API]');
+      res.json(flight);
     }
-    res.json(flight);
   });
 })
 
@@ -186,12 +192,14 @@ router.route('/flights/:flight_id')
     // use our bear model to find the bear we want
     Flight.findById(req.params.flight_id, function(err, flight) {
       if (err) {
+        log(err, 'error', '[API]');
         res.send(err);
       }
       // update the flights info
       flight.username = req.body.username;
       flight.save(function(err) {
         if (err) {
+          log(err, 'error', '[API]');
           res.send(err);
         }
         res.json({
@@ -207,6 +215,7 @@ router.route('/flights/:flight_id')
       _id: req.params.flight_id
     }, function(err, flight) {
       if (err) {
+        log(err, 'error', '[API]');
         res.send(err);
       }
 
@@ -240,10 +249,10 @@ router.route('/searchflights')
     //.select('username origin destination departure carrier flightnumber')
     .exec(function(err, flights) {
       if (err) {
-        log(err, 'error');
+        log(err, 'error', '[API]');
         return next(err);
       } else {
-        log(flights, 'debug');
+        log(flights, 'debug', '[API]');
         res.send(flights);
       }
     });
@@ -262,5 +271,5 @@ app.use(function(err, req, res, next) {
 });
 
 app.listen(app.get('port'), function() {
-  logger('Express server listening on port ' + app.get('port'), 'info', '[EXPRESS]');
+  logger('Express server listening on ' + serverUrl, 'info', '[EXPRESS]');
 });

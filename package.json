@@ -1,0 +1,60 @@
+{
+  "name": "AppAtNightService",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AppAtNightService",
+  "author": "Travel Track 1",
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "main": "server.js",
+  "engines": {
+    "node": "0.10.26",
+    "npm": "1.4.3"
+  },
+  "scripts": {
+    "start": "node node_modules/grunt-cli/bin/grunt",
+    "test": "node node_modules/grunt-cli/bin/grunt test"
+  },
+  "dependencies": {
+    "async": "latest",
+    "underscore": "latest",
+    "winston": "latest",
+    "grunt": "latest",
+    "grunt-cli": "latest",
+    "grunt-env": "latest",
+    "forever": "latest",
+    "grunt-concurrent": "latest",
+    "supertest": "latest",
+    "grunt-mocha-test": "latest",
+    "grunt-contrib-jshint": "latest",
+    "grunt-nodemon": "latest",
+    "grunt-contrib-watch": "latest",
+    "graceful-fs": "latest"
+  },
+  "devDependencies": {
+    "mocha": "latest",
+    "xunit-file": "latest",
+    "chai": "1.8.x",
+    "chai-things": "latest",
+    "chai-datetime": "latest",
+    "chai-json-schema": "latest",
+    "proxyquire": "latest",
+    "should": "latest",
+    "grunt-contrib-watch": "latest",
+    "grunt-contrib-jshint": "latest",
+    "grunt-nodemon": "latest",
+    "grunt-concurrent": "latest",
+    "grunt-mocha-test": "latest",
+    "grunt-contrib-uglify": "latest",
+    "karma-mocha": "latest",
+    "karma": "latest",
+    "karma-chrome-launcher": "latest",
+    "grunt-karma": "latest",
+    "karma-chai": "latest",
+    "sinon": "latest",
+    "karma-sinon": "latest",
+    "grunt-jsdoc": "latest",
+    "ink-docstrap": "latest",
+    "jsdoc": "^3.3.0-alpha8"
+  }
+}

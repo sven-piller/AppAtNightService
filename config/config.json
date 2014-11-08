@@ -1,0 +1,11 @@
+{
+  "server" : {
+    "host" : "localhost",
+    "port" : "27016"
+  },
+  "db" : {
+    "host" : "localhost",
+    "port" : "27017",
+		"dbname" : "appatnight"
+  }
+}

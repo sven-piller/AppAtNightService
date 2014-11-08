@@ -1,6 +1,10 @@
 {
   "server" : {
+<<<<<<< HEAD
     "host" : "localhost",
+=======
+    "host" : "appatnightservice.herokuapp.com",
+>>>>>>> url falsch
     "port" : "27016"
   },
   "db" : {

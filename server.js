@@ -75,19 +75,8 @@ db.once('open', function() {
 });
 mongoose.connect(databaseUrl);
 
-var sampleRequest = {
-  "username": "@svenpiller",
-  "origin": "MUC",
-  "destination": "FRA",
-  "departure": "2014-11-09T11:30:12",
-  "arrival": "2014-11-09T12:30:12",
-  "flightnumber": "108",
-  "carrier": "LH"
-};
-
 // API
 var app = express();
-
 app.set('port', properties.server.port || 3000);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -95,14 +84,10 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(methodOverride());
 app.use(cookieParser());
-// app.use(session({ secret: 'keyboard cat' }));
-// app.use(passport.initialize());
-// app.use(passport.session());
-// app.use(express.static(path.join(__dirname, 'public')));
 
 // ROUTES FOR OUR API
 // =============================================================================
-var router = express.Router(); // get an instance of the express Router
+var router = express.Router();
 
 router.use(function(req, res, next) {
   // do logging
@@ -111,14 +96,11 @@ router.use(function(req, res, next) {
   next(); // make sure we go to the next routes and don't stop here
 });
 
-// test route to make sure everything is working (accessed at GET http://localhost:8080/api)
 router.get('/', function(req, res) {
   res.json({
     message: 'API available'
   });
 });
-
-// more routes for our API will happen here
 
 // on routes that end in /flights
 // ----------------------------------------------------
@@ -254,34 +236,6 @@ router.route('/searchflights')
 // all of our routes will be prefixed with /api
 app.use('/api', router);
 
-
-
-/*
-app.get('/api/flights', function(req, res, next) {
-  var query = Flight.find();
-  req.query = sampleRequest;
-  if (req.query.username) {
-    query.where({ username: req.query.username });
-    //TODO: iterate over the array of usernames
-  } else {
-    //TODO: Errormessage, no username is given to the api
-  }
-  query.exec(function(err, flights) {
-    if (err) {
-      return next(err);
-    }
-    log(flights);
-    res.send(flights);
-  });
-});
-
-app.post()
-
-
-app.get('*', function(req, res) {
-  res.redirect('/#' + req.originalUrl);
-});
-*/
 app.use(function(err, req, res, next) {
   console.error(err.stack);
   res.send(500, {

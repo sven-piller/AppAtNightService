@@ -1,8 +1,4 @@
 var mongoose = require('mongoose');
-// config files
-var properties = require('./../../config/config.json');
-// lib files
-var logger = require('./../../lib/libLogger').log;
 
 var FlightSchema = new mongoose.Schema({
   username: String,

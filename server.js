@@ -68,16 +68,8 @@ function log(message, level, indicator) {
  * @type {String}
  * @default
  */
-<<<<<<< HEAD
-<<<<<<< HEAD
-var serverUrl = 'http://' + properties.server.host + ':' + properties.server.port;
-=======
 var port = process.env.PORT || properties.server.port || 5000;
 var serverUrl = 'http://' + properties.server.host + ':' + port;
->>>>>>> port workaround
-=======
-var serverUrl = 'http://' + properties.server.host + ':' + ( process.env.PORT || properties.server.port || 5000 );
->>>>>>> port heroku
 
 log(properties.server, 'debug');
 log(properties.db, 'debug');

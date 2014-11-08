@@ -11,7 +11,7 @@
  */
 
 // npm packets
-
+var mongoose = require('mongoose');
 // config files
 var properties = require('./config/config.json');
 // lib files
@@ -45,11 +45,39 @@ var RELEASE = '1.0.20141108';
  */
 function log(message, level) {
     if (!level) {
-        level = "info";
+        level = 'info';
     }
-    logger(message, level, "[SERVER]");
+    logger(message, level, '[SERVER]');
 }
 
-log("Server online", 'info');
+var serverUrl = 'http://'+ properties.server.host + ':' + properties.server.port;
+log('Server online: ' + serverUrl , 'info');
 log(properties.server, 'debug');
 log(properties.db, 'debug');
+
+
+// Check Connection to database
+var databaseUrl = 'mongodb://' + properties.db.host + '/' + properties.db.dbname;
+var db = mongoose.connection;
+
+db.on('error', function() {
+  log('Fehler bei der Anbindung der Datenbank', 'error');
+});
+db.once('open', function() {
+  log('Anbindung der Datenbank ' + databaseUrl + ' in Ordnung');
+
+  var flightSchema = new mongoose.Schema({
+    _id: Number,
+    username: [String],
+    departure: String,
+    destination: String,
+    date: Date,
+    time: Date,
+    airline: String,
+    flightnumber: String
+  });
+
+  var Flight = mongoose.model('Flight', flightSchema);
+});
+
+mongoose.connect(databaseUrl);

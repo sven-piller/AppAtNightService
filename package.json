@@ -29,7 +29,8 @@
     "grunt-contrib-jshint": "latest",
     "grunt-nodemon": "latest",
     "grunt-contrib-watch": "latest",
-    "graceful-fs": "latest"
+    "graceful-fs": "latest",
+    "mongoose": "^3.8.18"
   },
   "devDependencies": {
     "mocha": "latest",

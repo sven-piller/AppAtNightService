@@ -124,7 +124,8 @@
 
 
     <section class="readme-section">
-        <article><h1>AppAtNightService</h1><p>Ausführen:</p>
+        <article><h1>AppAtNightService</h1><p><strong>Travel Track 1</strong> von <a href="http://www.lufthansa.com">Lufthansa</a> während des <a href="https://www.appatnight.de/">Hackathon App@Night</a> an der LMU München am Wochenende vom 07.11. - 09.11.2014.</p>
+<p>Ausführen:</p>
 <blockquote>
 <p>node server.js</p>
 </blockquote>
@@ -165,13 +166,14 @@
   &quot;arrival&quot;      : &quot;2014-11-09T12:30:12&quot;,
   &quot;departure&quot;    : &quot;2014-11-09T11:30:12&quot;,
   &quot;departureDate&quot;: &quot;2014-11-09T11:30:12.000Z&quot;,
+  &quot;identifier&quot;   : &quot;LH-108-2014-11-09&quot;,
   &quot;destination&quot;  : &quot;FRA&quot;,
   &quot;origin&quot;       : &quot;MUC&quot;,
   &quot;username&quot;     : &quot;maxmustermann&quot;,
   &quot;_id&quot;          : &quot;545e4110a9b586082fbea976&quot;
 }</code></pre><h3>Alle Flüge zu den übergebenen Freunden suchen</h3><p>Es werden alle Einträge in der Datenbank zurückgegeben, auf die die Kriterien zutreffen.
-Dabei wird die Destination auf Gleichheit geprüft. Der Username wird in dem Array mit allen bekannten Usernamen 
-abgeglichen. Die zu suchenden Flüge liegen in einem Zeitfenster von dem gewünschten Abflugtag +/- der Tage im 
+Dabei wird die Destination auf Gleichheit geprüft. Der Username wird in dem Array mit allen bekannten Usernamen
+abgeglichen. Die zu suchenden Flüge liegen in einem Zeitfenster von dem gewünschten Abflugtag +/- der Tage im
 Parameter <em>timerange</em>.</p>
 <p><strong>request</strong></p>
 <blockquote>
@@ -196,6 +198,7 @@ Parameter <em>timerange</em>.</p>
   &quot;arrival&quot;      : &quot;2014-11-09T12:30:12&quot;,
   &quot;departure&quot;    : &quot;2014-11-09T11:30:12&quot;,
   &quot;departureDate&quot;: &quot;2014-11-09T11:30:12.000Z&quot;,
+  &quot;identifier&quot;   : &quot;LH-108-2014-11-09&quot;,
   &quot;destination&quot;  : &quot;FRA&quot;,
   &quot;origin&quot;       : &quot;MUC&quot;,
   &quot;username&quot;     : &quot;maxmustermann&quot;,
@@ -212,6 +215,7 @@ Parameter <em>timerange</em>.</p>
   &quot;arrival&quot;      : &quot;2014-11-09T12:30:12&quot;,
   &quot;departure&quot;    : &quot;2014-11-09T11:30:12&quot;,
   &quot;departureDate&quot;: &quot;2014-11-09T11:30:12.000Z&quot;,
+  &quot;identifier&quot;   : &quot;LH-108-2014-11-09&quot;,
   &quot;destination&quot;  : &quot;FRA&quot;,
   &quot;origin&quot;       : &quot;MUC&quot;,
   &quot;username&quot;     : &quot;maxmustermann&quot;,
@@ -223,6 +227,7 @@ Parameter <em>timerange</em>.</p>
   &quot;arrival&quot;      : &quot;2014-11-09T12:30:12&quot;,
   &quot;departure&quot;    : &quot;2014-11-09T11:30:12&quot;,
   &quot;departureDate&quot;: &quot;2014-11-09T11:30:12.000Z&quot;,
+  &quot;identifier&quot;   : &quot;LH-108-2014-11-09&quot;,
   &quot;destination&quot;  : &quot;FRA&quot;,
   &quot;origin&quot;       : &quot;MUC&quot;,
   &quot;username&quot;     : &quot;susisorglos&quot;,
@@ -239,6 +244,7 @@ Parameter <em>timerange</em>.</p>
   &quot;arrival&quot;      : &quot;2014-11-09T12:30:12&quot;,
   &quot;departure&quot;    : &quot;2014-11-09T11:30:12&quot;,
   &quot;departureDate&quot;: &quot;2014-11-09T11:30:12.000Z&quot;,
+  &quot;identifier&quot;   : &quot;LH-108-2014-11-09&quot;,
   &quot;destination&quot;  : &quot;FRA&quot;,
   &quot;origin&quot;       : &quot;MUC&quot;,
   &quot;username&quot;     : &quot;maxmustermann&quot;,
@@ -261,6 +267,7 @@ Parameter <em>timerange</em>.</p>
   &quot;arrival&quot;      : &quot;2014-11-09T12:30:12&quot;,
   &quot;departure&quot;    : &quot;2014-11-09T10:30:12&quot;,
   &quot;departureDate&quot;: &quot;2014-11-09T10:30:12.000Z&quot;,
+  &quot;identifier&quot;   : &quot;LH-108-2014-11-09&quot;,
   &quot;destination&quot;  : &quot;FRA&quot;,
   &quot;origin&quot;       : &quot;MUC&quot;,
   &quot;username&quot;     : &quot;maxmustermann&quot;,

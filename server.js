@@ -144,6 +144,9 @@ router.route('/flights')
   flight.carrier = req.body.carrier;
   flight.departureDate = new Date(req.body.departure);
   flight.identifier = req.body.carrier + '-' + req.body.flightnumber + '-' + req.body.departure.substr(0, 10);
+  flight.points = req.body.points;
+  flight.friends = req.body.friends;
+  flight.flightduration = req.body.flightduration;
 
 
   flight.save(function(err) {
@@ -267,7 +270,6 @@ router.route('/flights/:flight_id')
         log(err, 'error', '[API]');
         res.send(err);
       }
-
       res.json({
         message: 'Successfully deleted'
       });
@@ -303,6 +305,36 @@ router.route('/searchflights')
         res.send(flights);
       }
     });
+});
+
+// on routes that end in /searchflights
+// ----------------------------------------------------
+router.route('/highscore')
+
+// get all the points
+.get(function(req, res, next) {
+  Flight.aggregate([{
+    $group: {
+      _id: {
+        username: "$username",
+      },
+      total: {
+        $sum: "$points"
+      },
+      count: {
+        $sum: 1
+      }
+    }
+  }], function(err, flights) {
+    if (err) {
+      log(err, 'error', '[API]');
+      return next(err);
+    } else {
+
+      log(flights, 'debug', '[API]');
+      res.send(flights);
+    }
+  });
 });
 
 

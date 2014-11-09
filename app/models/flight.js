@@ -11,6 +11,7 @@ var FlightSchema = new mongoose.Schema({
   flightnumber: String,
   identifier: String,
   flightduration: Number,
+  friends: Number,
   points: Number
 });
 

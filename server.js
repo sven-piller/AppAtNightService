@@ -314,27 +314,30 @@ router.route('/highscore')
 // get all the points
 .get(function(req, res, next) {
   Flight.aggregate([{
-    $group: {
-      _id: {
-        username: "$username",
-      },
-      total: {
-        $sum: "$points"
-      },
-      count: {
-        $sum: 1
+      $group: {
+        _id: {
+          username: "$username",
+        },
+        total: {
+          $sum: "$points"
+        },
+        count: {
+          $sum: 1
+        }
       }
-    }
-  }], function(err, flights) {
-    if (err) {
-      log(err, 'error', '[API]');
-      return next(err);
-    } else {
+    }]).sort({
+      total: 'desc'
+    })
+    .exec(function(err, flights) {
+      if (err) {
+        log(err, 'error', '[API]');
+        return next(err);
+      } else {
 
-      log(flights, 'debug', '[API]');
-      res.send(flights);
-    }
-  });
+        log(flights, 'debug', '[API]');
+        res.send(flights);
+      }
+    });
 });
 
 

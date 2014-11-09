@@ -324,9 +324,11 @@ router.route('/searchflights')
   var query = Flight.find()
     .where('destination').equals(req.body.destination)
     .where('departureDate').gt(lowerBound).lt(upperBound)
-    .where('username').in(req.body.usernames)
+    .where('username').in(req.body.friends)
     //    .limit(20)
-    .sort('departure')
+    .sort({
+      points: 'desc'
+    })
     //.select('username origin destination departure carrier flightnumber')
     .exec(function(err, flights) {
       if (err) {

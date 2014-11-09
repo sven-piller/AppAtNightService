@@ -6,81 +6,76 @@ module.exports =
 
     // Project configuration.
     grunt.initConfig({
-      pkg : grunt.file.readJSON('package.json'),
-      watch : {
-        js : {
-          files : [ 'gruntfile.js', 'server.js', 'lib/**/*.js', 'test/**/*.js', 'config/**/*.json' ],
-          tasks : [ 'jshint' ],
-          options : {
-            livereload : true,
+      pkg: grunt.file.readJSON('package.json'),
+      watch: {
+        js: {
+          files: ['package.json', 'gruntfile.js', 'server.js', 'app/**/*.js', 'lib/**/*.js', 'test/**/*.js',
+            'config/**/*.json'
+          ],
+          tasks: ['jshint'],
+          options: {
+            livereload: true,
           },
         },
       },
-      uglify : {
-        options : {
-          banner : '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
-        },
-        dist : {
-          src : 'src/rtcServer.js',
-          dest : 'dist/rtcServer.min.js'
-        }
-      },
-      jshint : {
-        all : {
-          options : {
-            curly : true,
-            forin : true,
-            laxbreak : true,
-            '-W015' : true
+      jshint: {
+        all: {
+          options: {
+            curly: true,
+            forin: true,
+            laxbreak: true,
+            '-W015': true
           },
-          src : [ 'gruntfile.js', 'server.js', 'lib/**/*.js', 'test/**/*.js' ],
+          src: ['package.json', 'gruntfile.js', 'server.js', 'app/**/*.js', 'lib/**/*.js', 'test/**/*.js',
+            'config/**/*.json'
+          ],
         }
       },
-      nodemon : {
-        dev : {
-          options : {
-            file : 'server.js',
-            args : [],
-            ignoredFiles : [ ],
-            watchedExtensions : [ 'js' ],
-            nodeArgs : [ '--debug' ],
-            delayTime : 5,
-            env : {
-              PORT : 8088
+      nodemon: {
+        dev: {
+          options: {
+            file: 'server.js',
+            args: [],
+            ignoredFiles: [],
+            watchedExtensions: ['js'],
+            nodeArgs: ['--debug'],
+            delayTime: 5,
+            env: {
+              PORT: 8088
             },
-            cwd : __dirname
+            cwd: __dirname
           }
         }
       },
-      concurrent : {
-        tasks : [ 'nodemon', 'watch' ],
-        options : {
-          logConcurrentOutput : true
+      concurrent: {
+        tasks: ['nodemon', 'watch'],
+        options: {
+          logConcurrentOutput: true
         }
       },
-      mochaTest : {
-        options : {
-          reporter : 'spec',
+      mochaTest: {
+        options: {
+          reporter: 'spec',
         },
-        src : [ 'test/**/*.js' ]
+        src: ['test/**/*.js']
       },
-      env : {
-        test : {
-          NODE_ENV : 'test'
+      env: {
+        test: {
+          NODE_ENV: 'test'
         }
       },
-      karma : {
-        unit : {
-          configFile : 'karma.conf.js'
+      karma: {
+        unit: {
+          configFile: 'karma.conf.js'
         }
       },
-      jsdoc : {
-        dist : {
-          src : [ '*.js', 'lib/*.js', 'README.md' ],
+      jsdoc: {
+        dist: {
+          src: ['*.js', 'lib/*.js', 'README.md'],
           jsdoc: 'node_modules/.bin/jsdoc',
           // jsdoc: 'node_modules/grunt-jsdoc/node_modules/jsdoc',
-          options : {
-            destination : 'doc',
+          options: {
+            destination: 'doc',
             template: 'node_modules/ink-docstrap/template',
             // template: 'node_modules/grunt-jsdoc/node_modules/ink-docstrap/template',
             configure: 'jsdoc.conf.json'
@@ -104,9 +99,9 @@ module.exports =
     grunt.option('force', true);
 
     // Default task(s).
-    grunt.registerTask('default', [ 'jshint', 'concurrent' ]);
+    grunt.registerTask('default', ['jshint', 'concurrent']);
 
     // Test task.
-    grunt.registerTask('test', [ 'env:test', 'mochaTest' ]);
+    grunt.registerTask('test', ['env:test', 'mochaTest']);
 
   };

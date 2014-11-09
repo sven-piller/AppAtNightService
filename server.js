@@ -67,16 +67,16 @@ function log(message, level, indicator) {
 
  * @type {String}
  */
-var serverUrl = null
-  /**
-   * string for database URL
-   * @type {String}
-   */
-var databaseUrl = null
-  /**
-   * portnumber
-   * @type {Number}
-   */
+var serverUrl = null;
+/**
+ * string for database URL
+ * @type {String}
+ */
+var databaseUrl = null;
+/**
+ * portnumber
+ * @type {Number}
+ */
 var port = process.env.PORT || properties.server.port || 5000;
 log(process.env.NODE_ENV === 'production');
 if (process.env.NODE_ENV === 'production') {

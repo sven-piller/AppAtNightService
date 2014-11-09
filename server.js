@@ -19,6 +19,8 @@ var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
+var _ = require('underscore');
+var async = require('async');
 // config files
 var properties = require('./config/config.json');
 // lib files
@@ -144,10 +146,10 @@ router.route('/flights')
   flight.carrier = req.body.carrier;
   flight.departureDate = new Date(req.body.departure);
   flight.identifier = req.body.carrier + '-' + req.body.flightnumber + '-' + req.body.departure.substr(0, 10);
-  flight.points = req.body.points;
-  flight.friends = req.body.friends;
+  var amountOfFriends = _.size(req.body.friends);
+  flight.friends = amountOfFriends;
   flight.flightduration = req.body.flightduration;
-
+  flight.points = parseInt(req.body.flightduration, 10) * amountOfFriends;
 
   flight.save(function(err) {
     if (err) {
@@ -156,7 +158,39 @@ router.route('/flights')
     } else {
       log(flight, 'debug', '[API]');
       res.send(flight);
-      //res.json({ message: 'Flight created!' });
+      log(req.body.friends);
+
+      async.each(req.body.friends, function(friendName, next) {
+          log(friendName, 'debug', '[Calculate Friends Points]');
+          var query = Flight.findOne()
+            .where('identifier').equals(flight.identifier)
+            .where('username').equals(friendName)
+            .exec(function(err, friendFlight) {
+              if (friendFlight) {
+                if (err) {
+                  log(err, 'error', '[CFP]');
+                } else {
+                  log(friendFlight, 'debug', '[CFP]');
+                  friendFlight.friends += 1;
+                  friendFlight.points = friendFlight.flightduration * friendFlight.friends;
+                  friendFlight.save(function(err) {
+                    if (err) {
+                      log(err, 'error', '[CFP]');
+                    }
+                  });
+                }
+              }
+            });
+          next();
+        },
+        function(err) {
+          if (err) {
+            log('A friend could not be updated properly', 'error', '[CFP]');
+          } else {
+            log('All friends have been processed successfully', 'debug', '[CFP]');
+          }
+        }
+      )
     }
   });
 })
@@ -168,9 +202,6 @@ router.route('/flights')
     query.where({
       destination: req.query.destination
     });
-    //TODO: iterate over the array of usernames
-  } else {
-    //TODO: Errormessage, no username is given to the api
   }
   query.exec(function(err, flights) {
     if (err) {
@@ -245,7 +276,8 @@ router.route('/flights/:flight_id')
         flight.identifier += '-';
         flight.identifier += (flightnumber_changed) ? req.body.flightnumber : flight.flightnumber;
         flight.identifier += '-';
-        flight.identifier += (departure_changed) ? req.body.departure.substr(0, 10) : flight.departure.substr(0,
+        flight.identifier += (departure_changed) ? req.body.departure.substr(0, 10) : flight.departure.substr(
+          0,
           10);
       }
 

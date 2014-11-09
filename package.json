@@ -15,8 +15,8 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "async": "latest",
-    "underscore": "latest",
+    "async": "^0.9.0",
+    "underscore": "^1.7.0",
     "winston": "latest",
     "grunt": "latest",
     "grunt-cli": "latest",

@@ -133,17 +133,13 @@
 <blockquote>
 <p>node server.js</p>
 </blockquote>
-<p>Tests</p>
-<blockquote>
-<p>grunt test</p>
-</blockquote>
 <p>Dokumentation erstellen</p>
 <blockquote>
 <p>grunt jsdoc</p>
 </blockquote>
 <h2>Verwendung</h2><h3>Einen neuen Flug speichern</h3><p><strong>request</strong></p>
 <blockquote>
-<p>POST http://HOSTNAME:27016/api/flights</p>
+<p>POST http://appatnightservice.herokuapp.com/api/flights</p>
 </blockquote>
 <pre class="prettyprint source"><code>{
   &quot;username&quot;     : string,
@@ -183,7 +179,7 @@ abgeglichen. Die zu suchenden Flüge liegen in einem Zeitfenster von dem gewüns
 Parameter <em>timerange</em>.</p>
 <p><strong>request</strong></p>
 <blockquote>
-<p>POST http://HOSTNAME:27016/api/searchflights</p>
+<p>POST http://appatnightservice.herokuapp.com/api/searchflights</p>
 </blockquote>
 <pre class="prettyprint source"><code>{
   &quot;friends&quot;      : [string],
@@ -212,7 +208,7 @@ Parameter <em>timerange</em>.</p>
   &quot;_id&quot;          : &quot;545e4110a9b586082fbea976&quot;
 }</code></pre><h3>Alle Flüge auslesen</h3><p><strong>request</strong></p>
 <blockquote>
-<p>GET http://HOSTNAME:27016/api/flights</p>
+<p>GET http://appatnightservice.herokuapp.com/api/flights</p>
 </blockquote>
 <p><strong>response</strong></p>
 <pre class="prettyprint source"><code>{
@@ -241,7 +237,7 @@ Parameter <em>timerange</em>.</p>
   &quot;_id&quot;          : &quot;545e4110a9b586082fbea976&quot;
 }</code></pre><h3>Einen Flug anhand der ID auslesen</h3><p><strong>request</strong></p>
 <blockquote>
-<p>GET http://HOSTNAME:27016/api/flights/flight_id</p>
+<p>GET http://appatnightservice.herokuapp.com/api/flights/flight_id</p>
 </blockquote>
 <p><strong>response</strong></p>
 <pre class="prettyprint source"><code>{
@@ -258,7 +254,7 @@ Parameter <em>timerange</em>.</p>
   &quot;_id&quot;          : &quot;545e4110a9b586082fbea976&quot;
 }</code></pre><h3>Einen Flug verändern anhand der ID</h3><p><strong>request</strong></p>
 <blockquote>
-<p>PUT http://HOSTNAME:27016/api/flights/flight_id</p>
+<p>PUT http://appatnightservice.herokuapp.com/api/flights/flight_id</p>
 </blockquote>
 <pre class="prettyprint source"><code>{
   &quot;username&quot;     : string,

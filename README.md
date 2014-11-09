@@ -5,9 +5,6 @@ __Travel Track 1__ von [Lufthansa](http://www.lufthansa.com) während des [Hacka
 Ausführen:
 > node server.js
 
-Tests
-> grunt test
-
 Dokumentation erstellen
 > grunt jsdoc
 
@@ -16,7 +13,7 @@ Dokumentation erstellen
 
 ### Einen neuen Flug speichern
 __request__
-> POST http://HOSTNAME:27016/api/flights
+> POST http://appatnightservice.herokuapp.com/api/flights
 
     {
       "username"     : string,
@@ -65,7 +62,7 @@ abgeglichen. Die zu suchenden Flüge liegen in einem Zeitfenster von dem gewüns
 Parameter _timerange_.
 
 __request__
-> POST http://HOSTNAME:27016/api/searchflights
+> POST http://appatnightservice.herokuapp.com/api/searchflights
 
     {
       "friends"      : [string],
@@ -102,7 +99,7 @@ __response__
 
 ### Alle Flüge auslesen
 __request__
-> GET http://HOSTNAME:27016/api/flights
+> GET http://appatnightservice.herokuapp.com/api/flights
 
 __response__
 
@@ -134,7 +131,7 @@ __response__
 
 ### Einen Flug anhand der ID auslesen
 __request__
-> GET http://HOSTNAME:27016/api/flights/flight_id
+> GET http://appatnightservice.herokuapp.com/api/flights/flight_id
 
 __response__
 
@@ -154,7 +151,7 @@ __response__
 
 ### Einen Flug verändern anhand der ID
 __request__
-> PUT http://HOSTNAME:27016/api/flights/flight_id
+> PUT http://appatnightservice.herokuapp.com/api/flights/flight_id
 
     {
       "username"     : string,

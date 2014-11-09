@@ -1,11 +1,11 @@
 {
-  "server" : {
-    "host" : "appatnightservice.herokuapp.com",
-    "port" : "27016"
+  "server": {
+    "host": "appatnightservice.herokuapp.com",
+    "port": "27016"
   },
-  "db" : {
-    "host" : "test:test@ds033390.mongolab.com",
-    "port" : "33390",
-    "dbname" : "appatnight"
+  "db": {
+    "host": "localhost",
+    "port": "27017",
+    "dbname": "appatnight"
   }
 }

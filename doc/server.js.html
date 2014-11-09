@@ -72,6 +72,10 @@
 						</li>
 						
 						<li>
+							<a href="global.html#port">port</a>
+						</li>
+						
+						<li>
 							<a href="global.html#RELEASE">RELEASE</a>
 						</li>
 						
@@ -126,6 +130,8 @@ var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
+var _ = require('underscore');
+var async = require('async');
 // config files
 var properties = require('./config/config.json');
 // lib files
@@ -171,22 +177,31 @@ function log(message, level, indicator) {
 
 /**
  * string for server URL
- * @constant
+
  * @type {String}
- * @default
  */
-var serverUrl = 'http://' + properties.server.host + ':' + properties.server.port;
-
-log(properties.server, 'debug');
-log(properties.db, 'debug');
-
+var serverUrl = null;
 /**
  * string for database URL
- * @constant
  * @type {String}
- * @default
  */
-var databaseUrl = 'mongodb://' + properties.db.host + '/' + properties.db.dbname;
+var databaseUrl = null;
+/**
+ * portnumber
+ * @type {Number}
+ */
+var port = process.env.PORT || properties.server.port || 5000;
+log(process.env.NODE_ENV === 'production');
+if (process.env.NODE_ENV === 'production') {
+  var serverUrl = 'http://' + properties.server.host + ':' + port;
+  databaseUrl = 'mongodb://test:test@ds033390.mongolab.com:33390/appatnight';
+} else {
+  var serverUrl = 'http://localhost:' + port;
+  databaseUrl = 'mongodb://' + properties.db.host + ':' + properties.db.port + '/' + properties.db.dbname;
+}
+log(serverUrl, 'debug');
+log(databaseUrl, 'debug');
+
 /**
  * database object
  * @type {object}
@@ -202,7 +217,7 @@ mongoose.connect(databaseUrl);
 
 // API
 var app = express();
-app.set('port', properties.server.port || 3000);
+app.set('port', port);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true
@@ -220,7 +235,7 @@ router.use(function(req, res, next) {
   next(); // make sure we go to the next routes and don't stop here
 });
 
-router.get('/', function(req, res) {
+router.get('/api', function(req, res) {
   res.json({
     message: 'API available'
   });
@@ -242,7 +257,10 @@ router.route('/flights')
   flight.carrier = req.body.carrier;
   flight.departureDate = new Date(req.body.departure);
   flight.identifier = req.body.carrier + '-' + req.body.flightnumber + '-' + req.body.departure.substr(0, 10);
-
+  var amountOfFriends = _.size(req.body.friends);
+  flight.friends = amountOfFriends;
+  flight.flightduration = req.body.flightduration;
+  flight.points = parseInt(req.body.flightduration, 10) * amountOfFriends;
 
   flight.save(function(err) {
     if (err) {
@@ -251,7 +269,39 @@ router.route('/flights')
     } else {
       log(flight, 'debug', '[API]');
       res.send(flight);
-      //res.json({ message: 'Flight created!' });
+      log(req.body.friends);
+
+      async.each(req.body.friends, function(friendName, next) {
+          log(friendName, 'debug', '[Calculate Friends Points]');
+          var query = Flight.findOne()
+            .where('identifier').equals(flight.identifier)
+            .where('username').equals(friendName)
+            .exec(function(err, friendFlight) {
+              if (friendFlight) {
+                if (err) {
+                  log(err, 'error', '[CFP]');
+                } else {
+                  log(friendFlight, 'debug', '[CFP]');
+                  friendFlight.friends += 1;
+                  friendFlight.points = friendFlight.flightduration * friendFlight.friends;
+                  friendFlight.save(function(err) {
+                    if (err) {
+                      log(err, 'error', '[CFP]');
+                    }
+                  });
+                }
+              }
+            });
+          next();
+        },
+        function(err) {
+          if (err) {
+            log('A friend could not be updated properly', 'error', '[CFP]');
+          } else {
+            log('All friends have been processed successfully', 'debug', '[CFP]');
+          }
+        }
+      )
     }
   });
 })
@@ -263,9 +313,6 @@ router.route('/flights')
     query.where({
       destination: req.query.destination
     });
-    //TODO: iterate over the array of usernames
-  } else {
-    //TODO: Errormessage, no username is given to the api
   }
   query.exec(function(err, flights) {
     if (err) {
@@ -340,7 +387,8 @@ router.route('/flights/:flight_id')
         flight.identifier += '-';
         flight.identifier += (flightnumber_changed) ? req.body.flightnumber : flight.flightnumber;
         flight.identifier += '-';
-        flight.identifier += (departure_changed) ? req.body.departure.substr(0, 10) : flight.departure.substr(0,
+        flight.identifier += (departure_changed) ? req.body.departure.substr(0, 10) : flight.departure.substr(
+          0,
           10);
       }
 
@@ -365,7 +413,6 @@ router.route('/flights/:flight_id')
         log(err, 'error', '[API]');
         res.send(err);
       }
-
       res.json({
         message: 'Successfully deleted'
       });
@@ -388,9 +435,11 @@ router.route('/searchflights')
   var query = Flight.find()
     .where('destination').equals(req.body.destination)
     .where('departureDate').gt(lowerBound).lt(upperBound)
-    .where('username').in(req.body.usernames)
+    .where('username').in(req.body.friends)
     //    .limit(20)
-    .sort('departure')
+    .sort({
+      points: 'desc'
+    })
     //.select('username origin destination departure carrier flightnumber')
     .exec(function(err, flights) {
       if (err) {
@@ -403,10 +452,47 @@ router.route('/searchflights')
     });
 });
 
+// on routes that end in /searchflights
+// ----------------------------------------------------
+router.route('/highscore')
+
+// get all the points
+.get(function(req, res, next) {
+  Flight.aggregate([{
+      $group: {
+        _id: {
+          username: "$username",
+        },
+        total: {
+          $sum: "$points"
+        },
+        count: {
+          $sum: 1
+        }
+      }
+    }]).sort({
+      total: 'desc'
+    })
+    .exec(function(err, flights) {
+      if (err) {
+        log(err, 'error', '[API]');
+        return next(err);
+      } else {
+
+        log(flights, 'debug', '[API]');
+        res.send(flights);
+      }
+    });
+});
+
 
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api
 app.use('/api', router);
+
+app.get('/', function(request, response) {
+  response.send('Hello World');
+});
 
 app.use(function(err, req, res, next) {
   console.error(err.stack);
@@ -434,7 +520,7 @@ app.listen(app.get('port'), function() {
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha9</a>
-		on 08.11.2014 using the <a
+		on 09.11.2014 using the <a
 			href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>

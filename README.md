@@ -25,7 +25,8 @@ __request__
       "departure"    : string,
       "arrival"      : string,
       "carrier"      : string,
-      "flightnumber" : string
+      "flightnumber" : string,
+      "friends"      : [string]
     }
 
 __example__
@@ -37,7 +38,8 @@ __example__
       "departure"    : "2014-11-09T11:30:12",
       "arrival"      : "2014-11-09T12:30:12",
       "carrier"      : "LH",
-      "flightnumber" : "108"
+      "flightnumber" : "108",
+      "friends"      : "susisorglos"
     }
 
 __response__
@@ -66,7 +68,7 @@ __request__
 > POST http://HOSTNAME:27016/api/searchflights
 
     {
-      "usernames"    : [string],
+      "friends"      : [string],
       "destination"  : string,
       "departure"    : string,
       "timerange"    : integer
@@ -75,10 +77,11 @@ __request__
 __example__
 
     {
-      "usernames"    : "maxmustermann",
-      "usernames"    : "susisorglos",
+      "friends"      : "maxmustermann",
+      "friends"      : "susisorglos",
       "destination"  : "FRA",
       "departure"    : "2014-11-09T11:30:12",
+      "timerange"    : 2
     }
 
 __response__

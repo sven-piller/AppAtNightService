@@ -113,6 +113,7 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(methodOverride());
 app.use(cookieParser());
+app.use(express.static(__dirname + '/doc'));
 
 // ROUTES FOR OUR API
 // =============================================================================
@@ -378,10 +379,6 @@ router.route('/highscore')
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api
 app.use('/api', router);
-
-app.get('/', function(request, response) {
-  response.send('Hello World');
-});
 
 app.use(function(err, req, res, next) {
   console.error(err.stack);

@@ -1,0 +1,271 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Appatnightservice by sven-piller</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/sven-piller/AppAtNightService">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/sven-piller/AppAtNightService/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/sven-piller/AppAtNightService/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
+
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1>Appatnightservice</h1>
+          <p></p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/sven-piller">sven-piller</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
+        </div>
+
+        <h1>
+<a id="appatnightservice" class="anchor" href="#appatnightservice" aria-hidden="true"><span class="octicon octicon-link"></span></a>AppAtNightService</h1>
+
+<p><strong>Travel Track 1</strong> von <a href="http://www.lufthansa.com">Lufthansa</a> während des <a href="https://www.appatnight.de/">Hackathon App@Night</a> an der LMU München am Wochenende vom 07.11. - 09.11.2014.</p>
+
+<p>Ausführen:</p>
+
+<blockquote>
+<p>node server.js</p>
+</blockquote>
+
+<p>Dokumentation erstellen</p>
+
+<blockquote>
+<p>grunt jsdoc</p>
+</blockquote>
+
+<h2>
+<a id="verwendung" class="anchor" href="#verwendung" aria-hidden="true"><span class="octicon octicon-link"></span></a>Verwendung</h2>
+
+<h3>
+<a id="einen-neuen-flug-speichern" class="anchor" href="#einen-neuen-flug-speichern" aria-hidden="true"><span class="octicon octicon-link"></span></a>Einen neuen Flug speichern</h3>
+
+<p><strong>request</strong></p>
+
+<blockquote>
+<p>POST <a href="http://appatnightservice.herokuapp.com/api/flights">http://appatnightservice.herokuapp.com/api/flights</a></p>
+</blockquote>
+
+<pre><code>{
+  "username"     : string,
+  "origin"       : string,
+  "destination"  : string,
+  "departure"    : string,
+  "arrival"      : string,
+  "carrier"      : string,
+  "flightnumber" : string,
+  "friends"      : [string]
+}
+</code></pre>
+
+<p><strong>example</strong></p>
+
+<pre><code>{
+  "username"     : "maxmustermann",
+  "origin"       : "MUC",
+  "destination"  : "FRA",
+  "departure"    : "2014-11-09T11:30:12",
+  "arrival"      : "2014-11-09T12:30:12",
+  "carrier"      : "LH",
+  "flightnumber" : "108",
+  "friends"      : "susisorglos"
+}
+</code></pre>
+
+<p><strong>response</strong></p>
+
+<pre><code>{
+  "__v"          : 0,
+  "carrier"      : "LH",
+  "flightnumber" : "108",
+  "arrival"      : "2014-11-09T12:30:12",
+  "departure"    : "2014-11-09T11:30:12",
+  "departureDate": "2014-11-09T11:30:12.000Z",
+  "identifier"   : "LH-108-2014-11-09",
+  "destination"  : "FRA",
+  "origin"       : "MUC",
+  "username"     : "maxmustermann",
+  "_id"          : "545e4110a9b586082fbea976"
+}
+</code></pre>
+
+<h3>
+<a id="alle-flüge-zu-den-übergebenen-freunden-suchen" class="anchor" href="#alle-fl%C3%BCge-zu-den-%C3%BCbergebenen-freunden-suchen" aria-hidden="true"><span class="octicon octicon-link"></span></a>Alle Flüge zu den übergebenen Freunden suchen</h3>
+
+<p>Es werden alle Einträge in der Datenbank zurückgegeben, auf die die Kriterien zutreffen.
+Dabei wird die Destination auf Gleichheit geprüft. Der Username wird in dem Array mit allen bekannten Usernamen
+abgeglichen. Die zu suchenden Flüge liegen in einem Zeitfenster von dem gewünschten Abflugtag +/- der Tage im
+Parameter <em>timerange</em>.</p>
+
+<p><strong>request</strong></p>
+
+<blockquote>
+<p>POST <a href="http://appatnightservice.herokuapp.com/api/searchflights">http://appatnightservice.herokuapp.com/api/searchflights</a></p>
+</blockquote>
+
+<pre><code>{
+  "friends"      : [string],
+  "destination"  : string,
+  "departure"    : string,
+  "timerange"    : integer
+}
+</code></pre>
+
+<p><strong>example</strong></p>
+
+<pre><code>{
+  "friends"      : "maxmustermann",
+  "friends"      : "susisorglos",
+  "destination"  : "FRA",
+  "departure"    : "2014-11-09T11:30:12",
+  "timerange"    : 2
+}
+</code></pre>
+
+<p><strong>response</strong></p>
+
+<pre><code>{
+  "__v"          : 0,
+  "carrier"      : "LH",
+  "flightnumber" : "108",
+  "arrival"      : "2014-11-09T12:30:12",
+  "departure"    : "2014-11-09T11:30:12",
+  "departureDate": "2014-11-09T11:30:12.000Z",
+  "identifier"   : "LH-108-2014-11-09",
+  "destination"  : "FRA",
+  "origin"       : "MUC",
+  "username"     : "maxmustermann",
+  "_id"          : "545e4110a9b586082fbea976"
+}
+</code></pre>
+
+<h3>
+<a id="alle-flüge-auslesen" class="anchor" href="#alle-fl%C3%BCge-auslesen" aria-hidden="true"><span class="octicon octicon-link"></span></a>Alle Flüge auslesen</h3>
+
+<p><strong>request</strong></p>
+
+<blockquote>
+<p>GET <a href="http://appatnightservice.herokuapp.com/api/flights">http://appatnightservice.herokuapp.com/api/flights</a></p>
+</blockquote>
+
+<p><strong>response</strong></p>
+
+<pre><code>{
+  "__v"          : 0,
+  "carrier"      : "LH",
+  "flightnumber" : "108",
+  "arrival"      : "2014-11-09T12:30:12",
+  "departure"    : "2014-11-09T11:30:12",
+  "departureDate": "2014-11-09T11:30:12.000Z",
+  "identifier"   : "LH-108-2014-11-09",
+  "destination"  : "FRA",
+  "origin"       : "MUC",
+  "username"     : "maxmustermann",
+  "_id"          : "545e4110a9b586082fbea976"
+}, {
+  "__v"          : 0,
+  "carrier"      : "LH",
+  "flightnumber" : "108",
+  "arrival"      : "2014-11-09T12:30:12",
+  "departure"    : "2014-11-09T11:30:12",
+  "departureDate": "2014-11-09T11:30:12.000Z",
+  "identifier"   : "LH-108-2014-11-09",
+  "destination"  : "FRA",
+  "origin"       : "MUC",
+  "username"     : "susisorglos",
+  "_id"          : "545e4110a9b586082fbea976"
+}
+</code></pre>
+
+<h3>
+<a id="einen-flug-anhand-der-id-auslesen" class="anchor" href="#einen-flug-anhand-der-id-auslesen" aria-hidden="true"><span class="octicon octicon-link"></span></a>Einen Flug anhand der ID auslesen</h3>
+
+<p><strong>request</strong></p>
+
+<blockquote>
+<p>GET <a href="http://appatnightservice.herokuapp.com/api/flights/flight_id">http://appatnightservice.herokuapp.com/api/flights/flight_id</a></p>
+</blockquote>
+
+<p><strong>response</strong></p>
+
+<pre><code>{
+  "__v"          : 0,
+  "carrier"      : "LH",
+  "flightnumber" : "108",
+  "arrival"      : "2014-11-09T12:30:12",
+  "departure"    : "2014-11-09T11:30:12",
+  "departureDate": "2014-11-09T11:30:12.000Z",
+  "identifier"   : "LH-108-2014-11-09",
+  "destination"  : "FRA",
+  "origin"       : "MUC",
+  "username"     : "maxmustermann",
+  "_id"          : "545e4110a9b586082fbea976"
+}
+</code></pre>
+
+<h3>
+<a id="einen-flug-verändern-anhand-der-id" class="anchor" href="#einen-flug-ver%C3%A4ndern-anhand-der-id" aria-hidden="true"><span class="octicon octicon-link"></span></a>Einen Flug verändern anhand der ID</h3>
+
+<p><strong>request</strong></p>
+
+<blockquote>
+<p>PUT <a href="http://appatnightservice.herokuapp.com/api/flights/flight_id">http://appatnightservice.herokuapp.com/api/flights/flight_id</a></p>
+</blockquote>
+
+<pre><code>{
+  "username"     : string,
+  ...
+}
+</code></pre>
+
+<p><strong>example</strong></p>
+
+<pre><code>{
+  "departure"    :"2014-11-09T10:30:12",
+}
+</code></pre>
+
+<p><strong>response</strong></p>
+
+<pre><code>{
+  "__v"          : 0,
+  "carrier"      : "LH",
+  "flightnumber" : "108",
+  "arrival"      : "2014-11-09T12:30:12",
+  "departure"    : "2014-11-09T10:30:12",
+  "departureDate": "2014-11-09T10:30:12.000Z",
+  "identifier"   : "LH-108-2014-11-09",
+  "destination"  : "FRA",
+  "origin"       : "MUC",
+  "username"     : "maxmustermann",
+  "_id"          : "545e4110a9b586082fbea976"
+}
+</code></pre>
+      </section>
+
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
